@@ -248,15 +248,9 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 	opsGenieClient.RetryableClient.Logger = nil //disable retryableClient's uncustomizable logging
 	setLogger(cfg)
 	setRetryPolicy(opsGenieClient, cfg)
-	printInfoLog(opsGenieClient)
 	return opsGenieClient, nil
 }
 
-func printInfoLog(client *OpsGenieClient) {
-	client.Config.Logger.Infof("Client is configured with ApiUrl: %s, RetryMaxCount: %v",
-		client.Config.OpsGenieAPIURL,
-		client.RetryableClient.RetryMax)
-}
 
 func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
 	if err != nil {
