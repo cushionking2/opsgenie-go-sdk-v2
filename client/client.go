@@ -146,7 +146,6 @@ func (rm *ResultMetadata) ValidateResultMetadata() error {
 
 	if unsetFields != "" {
 		unsetFields = unsetFields[:len(unsetFields)-1] + "."
-		return errors.New("Could not set" + unsetFields)
 	}
 
 	return nil
@@ -470,7 +469,6 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		metricPublisher.publish(buildHttpMetric(transactionId, request.ResourcePath(), response, err, duration(startTime, time.Now().UnixNano()), *req))
 	}
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
 		return err
 	}
 
@@ -478,7 +476,6 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = handleErrorIfExist(response)
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
 		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), response, err))
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "api-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
@@ -486,7 +483,6 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = result.Parse(response, result)
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "http-response-parsing-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
